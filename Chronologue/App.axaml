@@ -1,0 +1,21 @@
+<Application
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  x:Class="Chronologue.App"
+  xmlns:local="using:Chronologue"
+  RequestedThemeVariant="Dark">
+
+  <Application.DataTemplates>
+    <local:ViewLocator/>
+  </Application.DataTemplates>
+
+  <Application.Styles>
+    <FluentTheme />
+  </Application.Styles>
+
+  <Application.Resources>
+    <FontFamily x:Key="FluentSystemIcons.Regular">
+      avares://Chronologue/Assets/Fonts/FluentSystemIcons-Regular.ttf#FluentSystemIcons-Regular
+    </FontFamily>
+  </Application.Resources>
+</Application>
