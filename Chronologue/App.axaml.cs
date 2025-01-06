@@ -30,15 +30,18 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.RegisterServices();
 
-        using var provider = services.BuildServiceProvider();
+        var provider = services.BuildServiceProvider();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             DisableAvaloniaDataAnnotationValidation();
 
+            var mainWindowViewModel = provider.GetRequiredService<MainWindowViewModel>();
+            mainWindowViewModel.Initialize();
+
             desktop.MainWindow = new MainWindow
             {
-                DataContext = provider.GetRequiredService<MainWindowViewModel>(),
+                DataContext = mainWindowViewModel,
             };
         }
 

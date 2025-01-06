@@ -57,6 +57,8 @@ public partial class TaskListViewModel : ViewModelBase
         SetSelectedDateCommand = new RelayCommand<DateTime>(SetSelectedDate);
     }
 
+    public override string? Context => Constants.Context;
+
     public ObservableCollection<WeekDay> Week { get; } = new();
 
     public bool IsMondaySelected { get; set; }

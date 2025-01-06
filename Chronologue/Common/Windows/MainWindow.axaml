@@ -19,6 +19,12 @@
     <vm:MainWindowViewModel/>
   </Design.DataContext>
 
+  <Window.Styles>
+    <Style Selector="Button.isActive">
+      <Setter Property="Background" Value="#2e2e2e" />
+    </Style>
+  </Window.Styles>
+
   <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,*">
     <StackPanel
       Grid.Column="0"
@@ -42,7 +48,46 @@
       Grid.Row="1"
       Orientation="Vertical">
 
-      <Button
+      <ItemsControl x:Name="Sidebar" ItemsSource="{Binding SidebarItems}">
+        <ItemsControl.Styles>
+          <Style Selector="Button">
+            <Setter Property="Background" Value="Transparent" />
+          </Style>
+        </ItemsControl.Styles>
+        
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Button
+              Classes.isActive="{Binding IsActive}"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              VerticalContentAlignment="Center"
+              Height="75"
+              Margin="5,-1,5,5"
+              Padding="0"
+              CornerRadius="10"
+              Command="{Binding #Sidebar.((vm:MainWindowViewModel)DataContext).NavigateCommand}"
+              CommandParameter="{Binding PageType}">
+
+              <StackPanel Orientation="Vertical">
+                <TextBlock
+                  FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                  FontSize="32"
+                  TextAlignment="Center"
+                  Text="{Binding Icon}"
+                  Margin="0,0,0,5"/>
+
+                <TextBlock
+                  FontSize="12"
+                  TextAlignment="Center"
+                  Text="{Binding Text}" />
+              </StackPanel>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <!--<Button
         Background="#2e2e2e"
         HorizontalAlignment="Stretch"
         HorizontalContentAlignment="Center"
@@ -140,7 +185,7 @@
             TextAlignment="Center"
             Text="Options" />
         </StackPanel>
-      </Button>
+      </Button>-->
     </StackPanel>
 
     <Border
@@ -150,7 +195,11 @@
       CornerRadius="10,0,0,0"
       Padding="20">
 
-      <ContentControl Content="{Binding Page}" />
+      <TransitioningContentControl Content="{Binding Page}">
+        <TransitioningContentControl.PageTransition>
+          <CrossFade Duration="0:0:0.25" />
+        </TransitioningContentControl.PageTransition>
+      </TransitioningContentControl>
     </Border>
   </Grid>
 
