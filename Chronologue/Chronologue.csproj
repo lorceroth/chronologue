@@ -6,10 +6,19 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationIcon>Assets\Chronologue.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Remove="Assets\Chronologue.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Chronologue.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,9 +32,12 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Tasks\" />
+    <Compile Update="Features\Options\Views\OptionsView.axaml.cs">
+      <DependentUpon>OptionsView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

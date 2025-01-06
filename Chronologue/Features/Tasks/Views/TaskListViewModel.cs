@@ -1,11 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Chronologue.Common.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
-namespace Chronologue.Views;
+namespace Chronologue.Features.Tasks.Views;
 
 public record WeekDay(int Index, string ShortName, DateTime Date) : INotifyPropertyChanged
 {
@@ -25,7 +26,7 @@ public record WeekDay(int Index, string ShortName, DateTime Date) : INotifyPrope
     }
 };
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class TaskListViewModel : ViewModelBase
 {
     [ObservableProperty]
     private DateTime _selectedDate;
@@ -36,7 +37,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isSelectedDateOutsideOfWeek;
 
-    public MainWindowViewModel()
+    public TaskListViewModel()
     {
         var now = DateTime.UtcNow.Date;
         var dayOfWeek = (int)now.DayOfWeek;

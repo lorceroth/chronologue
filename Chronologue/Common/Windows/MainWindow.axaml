@@ -1,0 +1,157 @@
+<Window
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="using:Chronologue.Common.Windows"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="650"
+  x:Class="Chronologue.Common.Windows.MainWindow"
+  x:DataType="vm:MainWindowViewModel"
+  Icon="/Assets/Chronologue.ico"
+  Title="Chronologue"
+  Width="500"
+  Height="650"
+  Background="#1f1f1f"
+  ExtendClientAreaToDecorationsHint="True"
+  CanResize="False">
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+
+  <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,*">
+    <StackPanel
+      Grid.Column="0"
+      Grid.Row="0"
+      Grid.ColumnSpan="2"
+      Orientation="Horizontal"
+      Margin="10,8">
+
+      <Image
+        Source="/Assets/Chronologue.png"
+        Width="16"
+        Margin="0,0,10,0" />
+
+      <TextBlock
+        Text="Chronologue"
+        Foreground="#ccc" />
+    </StackPanel>
+
+    <StackPanel
+      Grid.Column="0"
+      Grid.Row="1"
+      Orientation="Vertical">
+
+      <Button
+        Background="#2e2e2e"
+        HorizontalAlignment="Stretch"
+        HorizontalContentAlignment="Center"
+        VerticalContentAlignment="Center"
+        Height="75"
+        Margin="5,-1,5,5"
+        Padding="0"
+        CornerRadius="10">
+
+        <StackPanel Orientation="Vertical">
+          <TextBlock
+            FontFamily="{StaticResource FluentSystemIcons.Regular}"
+            FontSize="32"
+            TextAlignment="Center"
+            Text="&#xe35e;"
+            Margin="0,0,0,5"/>
+
+          <TextBlock
+            FontSize="12"
+            TextAlignment="Center"
+            Text="Tasks" />
+        </StackPanel>
+      </Button>
+
+      <Button
+        Background="Transparent"
+        HorizontalAlignment="Stretch"
+        HorizontalContentAlignment="Center"
+        VerticalContentAlignment="Center"
+        Height="75"
+        Margin="5,0,5,5"
+        Padding="0"
+        CornerRadius="10">
+
+        <StackPanel Orientation="Vertical">
+          <TextBlock
+            FontFamily="{StaticResource FluentSystemIcons.Regular}"
+            FontSize="32"
+            TextAlignment="Center"
+            Text="&#xf1fd;"
+            Margin="0,0,0,5"/>
+
+          <TextBlock
+            FontSize="12"
+            TextAlignment="Center"
+            Text="Projects" />
+        </StackPanel>
+      </Button>
+
+      <Button
+        Background="Transparent"
+        HorizontalAlignment="Stretch"
+        HorizontalContentAlignment="Center"
+        VerticalContentAlignment="Center"
+        Height="75"
+        Margin="5,0,5,5"
+        Padding="0"
+        CornerRadius="10">
+
+        <StackPanel Orientation="Vertical">
+          <TextBlock
+            FontFamily="{StaticResource FluentSystemIcons.Regular}"
+            FontSize="32"
+            TextAlignment="Center"
+            Text="&#xf77d;"
+            Margin="0,0,0,5"/>
+
+          <TextBlock
+            FontSize="12"
+            TextAlignment="Center"
+            Text="Tags" />
+        </StackPanel>
+      </Button>
+
+      <Button
+        Background="Transparent"
+        HorizontalAlignment="Stretch"
+        HorizontalContentAlignment="Center"
+        VerticalContentAlignment="Center"
+        Height="75"
+        Margin="5,0,5,5"
+        Padding="0"
+        CornerRadius="10">
+
+        <StackPanel Orientation="Vertical">
+          <TextBlock
+            FontFamily="{StaticResource FluentSystemIcons.Regular}"
+            FontSize="32"
+            TextAlignment="Center"
+            Text="&#xf6aa;"
+            Margin="0,0,0,5"/>
+
+          <TextBlock
+            FontSize="12"
+            TextAlignment="Center"
+            Text="Options" />
+        </StackPanel>
+      </Button>
+    </StackPanel>
+
+    <Border
+      Grid.Column="1"
+      Grid.Row="1"
+      Background="#252525"
+      CornerRadius="10,0,0,0"
+      Padding="20">
+
+      <ContentControl Content="{Binding Page}" />
+    </Border>
+  </Grid>
+
+</Window>

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Chronologue.Views;
+namespace Chronologue.Common.Views;
 
 public class ViewModelBase : ObservableObject
 {

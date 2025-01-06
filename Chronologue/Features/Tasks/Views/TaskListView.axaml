@@ -1,0 +1,248 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="using:Chronologue.Features.Tasks.Views"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:i="System.Windows.Interactivity"
+  mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="595"
+  x:Class="Chronologue.Features.Tasks.Views.TaskListView"
+  x:DataType="vm:TaskListViewModel"
+  Background="#252525">
+
+  <Design.DataContext>
+    <vm:TaskListViewModel />
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="TextBox.unstyled,ComboBox.unstyled">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Padding" Value="7" />
+      <Setter Property="Margin" Value="-7,0" />
+
+      <Style Selector="^:pointerover /template/ Border,^:focus /template/ Border">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+      </Style>
+    </Style>
+  </UserControl.Styles>
+
+  <StackPanel Orientation="Vertical">
+    <TextBlock
+      FontSize="32"
+      FontWeight="Bold"
+      Text="{Binding SelectedDate.DayOfWeek}"
+      Margin="0,0,0,5" />
+
+    <TextBlock
+      FontSize="18"
+      FontWeight="Light"
+      Text="{Binding SelectedDate, StringFormat=d}"
+      Margin="0,0,0,20" />
+
+    <Grid ColumnDefinitions="*,*,*,*,*,*,*,*" Margin="0,0,-5,20" VerticalAlignment="Top">
+      <Grid.Styles>
+        <Style Selector="Button,ToggleButton">
+          <Setter Property="HorizontalAlignment" Value="Stretch" />
+          <Setter Property="HorizontalContentAlignment" Value="Center" />
+          <Setter Property="VerticalContentAlignment" Value="Center" />
+          <Setter Property="Height" Value="45" />
+          <Setter Property="Margin" Value="0,0,5,0" />
+          <Setter Property="Padding" Value="0" />
+          <Setter Property="CornerRadius" Value="23" />
+        </Style>
+      </Grid.Styles>
+
+      <ToggleButton
+        Grid.Column="0"
+        Content="{Binding Week[0].ShortName}"
+        Command="{Binding SetSelectedDateCommand}"
+        CommandParameter="{Binding Week[0].Date}"
+        IsChecked="{Binding Week[0].IsSelected, Mode=OneWay}" />
+
+      <ToggleButton
+        Grid.Column="1"
+        Content="{Binding Week[1].ShortName}"
+        Command="{Binding SetSelectedDateCommand}"
+        CommandParameter="{Binding Week[1].Date}"
+        IsChecked="{Binding Week[1].IsSelected, Mode=OneWay}" />
+
+      <ToggleButton
+        Grid.Column="2"
+        Content="{Binding Week[2].ShortName}"
+        Command="{Binding SetSelectedDateCommand}"
+        CommandParameter="{Binding Week[2].Date}"
+        IsChecked="{Binding Week[2].IsSelected, Mode=OneWay}" />
+
+      <ToggleButton
+        Grid.Column="3"
+        Content="{Binding Week[3].ShortName}"
+        Command="{Binding SetSelectedDateCommand}"
+        CommandParameter="{Binding Week[3].Date}"
+        IsChecked="{Binding Week[3].IsSelected, Mode=OneWay}" />
+
+      <ToggleButton
+        Grid.Column="4"
+        Content="{Binding Week[4].ShortName}"
+        Command="{Binding SetSelectedDateCommand}"
+        CommandParameter="{Binding Week[4].Date}"
+        IsChecked="{Binding Week[4].IsSelected, Mode=OneWay}" />
+
+      <ToggleButton
+        Grid.Column="5"
+        Content="{Binding Week[5].ShortName}"
+        Command="{Binding SetSelectedDateCommand}"
+        CommandParameter="{Binding Week[5].Date}"
+        IsChecked="{Binding Week[5].IsSelected, Mode=OneWay}" />
+
+      <ToggleButton
+        Grid.Column="6"
+        Content="{Binding Week[6].ShortName}"
+        Command="{Binding SetSelectedDateCommand}"
+        CommandParameter="{Binding Week[6].Date}"
+        IsChecked="{Binding Week[6].IsSelected, Mode=OneWay}" />
+
+      <ToggleButton
+        Grid.Column="7"
+        FontFamily="{StaticResource FluentSystemIcons.Regular}"
+        FontSize="20"
+        Content="&#xe24f;"
+        Command="{Binding ToggleDateSelectorCommand}"
+        IsChecked="{Binding IsSelectedDateOutsideOfWeek, Mode=OneWay}" />
+    </Grid>
+
+    <CalendarDatePicker
+      HorizontalAlignment="Stretch"
+      Margin="0,0,0,20"
+      IsVisible="{Binding IsDateSelectorVisible}"
+      SelectedDate="{Binding SelectedDate}"
+      SelectedDateFormat="Long"
+      FirstDayOfWeek="Monday" />
+
+    <Separator Background="#555" />
+
+    <ScrollViewer
+      AllowAutoHide="True"
+      Height="350">
+
+      <StackPanel Orientation="Vertical">
+        <Expander
+          HorizontalAlignment="Stretch"
+          IsExpanded="True"
+          Background="Transparent"
+          BorderBrush="Transparent"
+          Padding="0,10">
+
+          <Expander.Styles>
+            <Style Selector="Expander /template/ ToggleButton#ExpanderHeader">
+              <Setter Property="FontSize" Value="20" />
+              <Setter Property="Background" Value="Transparent" />
+              <Setter Property="BorderBrush" Value="Transparent" />
+              <Setter Property="Padding" Value="0" />
+            </Style>
+          </Expander.Styles>
+
+          <Expander.Header>
+            Project A
+          </Expander.Header>
+
+          <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+              <CheckBox Margin="0,0,10,0" />
+              <TextBlock
+                Text="Lorem ipsum dolor et samet"
+                Margin="0,7,0,0" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+              <CheckBox Margin="0,0,10,0" />
+              <TextBlock
+                Text="Lorem ipsum dolor et samet"
+                Margin="0,7,0,0" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+              <CheckBox Margin="0,0,10,0" />
+              <TextBlock
+                Text="Lorem ipsum dolor et samet"
+                Margin="0,7,0,0" />
+            </StackPanel>
+          </StackPanel>
+        </Expander>
+
+        <Expander
+          HorizontalAlignment="Stretch"
+          IsExpanded="True"
+          Background="Transparent"
+          BorderBrush="Transparent"
+          Padding="0,10">
+
+          <Expander.Styles>
+            <Style Selector="Expander /template/ ToggleButton#ExpanderHeader">
+              <Setter Property="FontSize" Value="20" />
+              <Setter Property="Background" Value="Transparent" />
+              <Setter Property="BorderBrush" Value="Transparent" />
+              <Setter Property="Padding" Value="0" />
+            </Style>
+          </Expander.Styles>
+
+          <Expander.Header>
+            Project B
+          </Expander.Header>
+
+          <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+              <CheckBox Margin="0,0,10,0" />
+              <TextBlock
+                Text="Lorem ipsum dolor et samet"
+                Margin="0,7,0,0" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+              <CheckBox Margin="0,0,10,0" />
+              <TextBlock
+                Text="Lorem ipsum dolor et samet"
+                Margin="0,7,0,0" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+              <CheckBox Margin="0,0,10,0" />
+              <TextBlock
+                Text="Lorem ipsum dolor et samet"
+                Margin="0,7,0,0" />
+            </StackPanel>
+          </StackPanel>
+        </Expander>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Separator Margin="0,0,0,20" Background="#555" />
+
+    <Border
+      BorderBrush="#555"
+      BorderThickness="1"
+      CornerRadius="5"
+      Padding="5">
+      <Grid ColumnDefinitions="*,Auto,Auto">
+        <TextBox
+          Grid.Column="0"
+          Classes="unstyled"
+          Margin="0,0,5,0"
+          Watermark="What's up next?" />
+
+        <ComboBox
+          Grid.Column="1"
+          Classes="unstyled"
+          SelectedIndex="0">
+
+          <ComboBoxItem Content="No project" />
+          <ComboBoxItem Content="Project A" />
+          <ComboBoxItem Content="Project B" />
+          <ComboBoxItem Content="Project C" />
+        </ComboBox>
+      </Grid>
+    </Border>
+  </StackPanel>
+  
+</UserControl>

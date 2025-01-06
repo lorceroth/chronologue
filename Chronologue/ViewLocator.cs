@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Chronologue.Views;
+using Chronologue.Common.Views;
 using System;
 
 namespace Chronologue;
