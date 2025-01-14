@@ -1,0 +1,133 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="using:Chronologue.Features.Tasks.Views"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:i="System.Windows.Interactivity"
+  mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="615"
+  x:Class="Chronologue.Features.Tasks.Views.TaskFormView"
+  x:DataType="vm:TaskFormViewModel"
+  Background="Transparent"
+  Padding="20">
+
+  <Design.DataContext>
+    <vm:TaskFormViewModel />
+  </Design.DataContext>
+
+  <Grid RowDefinitions="*,Auto">
+    <ScrollViewer
+      Grid.Row="0"
+      AllowAutoHide="True"
+      Padding="0,0,20,0"
+      Margin="0,0,-20,0">
+      
+      <StackPanel Orientation="Vertical">
+        <TextBlock
+          FontSize="32"
+          FontWeight="Bold"
+          TextWrapping="Wrap"
+          Text="Edit task"
+          Margin="0,0,0,20" />
+        
+        <TextBlock
+          Text="Title"
+          Margin="0,0,0,10" />
+        
+        <TextBox
+          Watermark="Build a fun feature"
+          Text="{Binding Item.Title}"
+          Margin="0,0,0,20" />
+
+        <TextBlock
+          Text="Description"
+          Margin="0,0,0,10" />
+
+        <TextBox
+          MinHeight="56"
+          AcceptsReturn="True"
+          TextWrapping="Wrap"
+          Watermark="Lorem ipsum dolor et samet"
+          Text="{Binding Item.Description}"
+          Margin="0,0,0,20" />
+
+        <TextBlock
+          Text="Day"
+          Margin="0,0,0,10" />
+
+        <CalendarDatePicker
+          HorizontalAlignment="Stretch"
+          Margin="0,0,0,20"
+          SelectedDate="{Binding Item.Due}"
+          SelectedDateFormat="Long"
+          FirstDayOfWeek="Monday" />
+
+        <TextBlock
+          Text="Project"
+          Margin="0,0,0,10" />
+
+        <ComboBox
+          HorizontalAlignment="Stretch"
+          SelectedIndex="0"
+          Margin="0,0,0,20">
+          
+          <ComboBoxItem>No project</ComboBoxItem>
+          <ComboBoxItem>Project A</ComboBoxItem>
+          <ComboBoxItem>Project B</ComboBoxItem>
+          <ComboBoxItem>Project C</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock
+          Text="Tags"
+          Margin="0,0,0,10" />
+
+        <ListBox SelectionMode="Multiple,Toggle">
+          <ListBoxItem>Bug</ListBoxItem>
+          <ListBoxItem>Troubleshooting</ListBoxItem>
+          <ListBoxItem>Feature</ListBoxItem>
+        </ListBox>
+      </StackPanel>
+    </ScrollViewer>
+    
+    <Border
+      Grid.Row="1"
+      BorderBrush="#555"
+      BorderThickness="0,1,0,0"
+      Padding="0,20,0,0">
+
+      <StackPanel Orientation="Horizontal">
+        <Button
+          Background="RoyalBlue"
+          Margin="0,0,10,0"
+          Command="{Binding SaveCommand}">
+          
+          <StackPanel Orientation="Horizontal">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xea49;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              VerticalAlignment="Center"
+              Text="Save changes" />
+          </StackPanel>
+        </Button>
+
+        <Button Command="{Binding DiscardCommand}">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xea49;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              VerticalAlignment="Center"
+              Text="Discard" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

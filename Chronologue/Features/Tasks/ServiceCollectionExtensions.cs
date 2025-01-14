@@ -16,5 +16,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddSingleton<TaskListViewModel>();
+        services.AddSingleton<TaskDetailsViewModel>();
+        services.AddSingleton<TaskFormViewModel>();
     }
 }

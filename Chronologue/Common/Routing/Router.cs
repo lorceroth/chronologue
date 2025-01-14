@@ -6,7 +6,7 @@ namespace Chronologue.Common.Routing;
 
 public class Router
 {
-    public event NavigatedEventHandler Navigated;
+    public event RouterNavigatedEventHandler? Navigated;
 
     private readonly IServiceProvider _services;
 
@@ -15,9 +15,10 @@ public class Router
         _services = services;
     }
 
-    public void Navigate<T>() where T : ViewModelBase => Navigate(typeof(T));
+    public void Navigate<T>(RouterParameters? parameters = default) where T : ViewModelBase =>
+        Navigate(typeof(T), parameters);
 
-    public void Navigate(Type? pageType)
+    public void Navigate(Type? pageType, RouterParameters? parameters = default)
     {
         if (pageType is null)
         {
@@ -28,7 +29,7 @@ public class Router
 
         if (page is not null)
         {
-            Navigated?.Invoke(this, new(page));
+            Navigated?.Invoke(this, new(page, parameters));
         }
     }
 }

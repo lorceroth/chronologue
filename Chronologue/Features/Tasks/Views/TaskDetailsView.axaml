@@ -1,0 +1,320 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="using:Chronologue.Features.Tasks.Views"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:i="System.Windows.Interactivity"
+  xmlns:converters="clr-namespace:Chronologue.Common.Converters;assembly=Chronologue"
+  mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="615"
+  x:Class="Chronologue.Features.Tasks.Views.TaskDetailsView"
+  x:DataType="vm:TaskDetailsViewModel"
+  Background="Transparent"
+  Padding="20">
+
+  <Design.DataContext>
+    <vm:TaskDetailsViewModel />
+  </Design.DataContext>
+
+  <UserControl.Resources>
+    <converters:RelativeTimeConverter x:Key="RelativeTimeConverter" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="*,Auto">   
+    <ScrollViewer
+      Grid.Row="0"
+      AllowAutoHide="True"
+      Padding="0,0,20,0"
+      Margin="0,0,-20,0">
+      
+      <StackPanel Orientation="Vertical">
+        <TextBlock
+          FontSize="32"
+          FontWeight="Bold"
+          TextWrapping="Wrap"
+          Text="{Binding Item.Title}"
+          Margin="0,0,0,20" />
+
+        <TextBlock
+          FontSize="18"
+          FontWeight="Light"
+          TextWrapping="Wrap"
+          LineHeight="27"
+          Text="{Binding Item.Description}"
+          Margin="0,0,0,15"
+          IsVisible="{Binding !!Item.Description}"/>
+
+        <TextBlock
+          FontSize="18"
+          FontWeight="Light"
+          TextWrapping="Wrap"
+          LineHeight="27"
+          Foreground="#888"
+          Text="No description"
+          Margin="0,0,0,15"
+          IsVisible="{Binding Item.Description, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,20" IsVisible="{Binding Item.Project, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <TextBlock
+            FontFamily="{StaticResource FluentSystemIcons.Regular}"
+            FontSize="24"
+            Text="&#xf1fd;"
+            Margin="0,0,5,0"/>
+
+          <TextBlock Text="{Binding Item.Project.Name}" VerticalAlignment="Center" />
+        </StackPanel>
+
+        <ItemsControl ItemsSource="{Binding Item.Tags}" IsVisible="{Binding Item.Tags.Count}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" Margin="0,0,0,20" /> 
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+            
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border
+                BorderBrush="{Binding Color}"
+                BorderThickness="2"
+                Padding="12 6"
+                CornerRadius="16"
+                Margin="0,0,5,0">
+
+                <TextBlock
+                  FontSize="12"
+                  FontWeight="Bold"
+                  Foreground="{Binding Color}"
+                  Text="{Binding Name}" />
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Border
+          BorderBrush="#b8b5fe"
+          BorderThickness="1"
+          CornerRadius="5"
+          Padding="10,15"
+          Margin="0,0,0,20"
+          IsVisible="{Binding Item.IsUpToDate}">
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="24"
+              Foreground="#b8b5fe"
+              Text="&#xe24f;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              Foreground="#b8b5fe"
+              VerticalAlignment="Center">
+
+              Due <Run FontWeight="Bold" Text="{Binding Item.Due, StringFormat=d}" />
+            </TextBlock>
+          </StackPanel>
+        </Border>
+
+        <Border
+          BorderBrush="LightGreen"
+          BorderThickness="1"
+          CornerRadius="5"
+          Padding="10,15"
+          Margin="0,0,0,20"
+          IsVisible="{Binding Item.CompletedAt, Converter={x:Static ObjectConverters.IsNotNull}}">
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="24"
+              Foreground="LightGreen"
+              Text="&#xf299;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              Foreground="LightGreen"
+              VerticalAlignment="Center">
+              
+              Completed at <Run FontWeight="Bold">January 6, 2025</Run>
+            </TextBlock>
+          </StackPanel>
+        </Border>
+
+        <Border
+          BorderBrush="Orange"
+          BorderThickness="1"
+          CornerRadius="5"
+          Padding="10,15"
+          Margin="0,0,0,20"
+          IsVisible="{Binding Item.IsOverdue}">
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="24"
+              Foreground="Orange"
+              Text="&#xf86a;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              Foreground="Orange"
+              VerticalAlignment="Center">
+              Overdue since <Run FontWeight="Bold">January 6, 2025</Run>
+            </TextBlock>
+          </StackPanel>
+        </Border>
+
+        <TextBlock
+          FontSize="20"
+          Text="Notes"
+          Margin="0,0,0,20" />
+
+        <TextBox
+          TextWrapping="Wrap"
+          AcceptsReturn="True"
+          Watermark="Add a note to this task"
+          Margin="0,0,0,20"/>
+
+        <Border
+          BorderBrush="#888"
+          BorderThickness="1"
+          CornerRadius="5"
+          Padding="10,15"
+          Margin="0,0,0,20"
+          IsVisible="{Binding !Item.Notes.Count}">
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="24"
+              Foreground="#888"
+              Text="&#xe3fe;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              Foreground="#888"
+              VerticalAlignment="Center">
+
+              Nothing noted here yet!
+            </TextBlock>
+          </StackPanel>
+        </Border>
+
+        <ItemsControl ItemsSource="{Binding Item.Notes}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border
+                Background="#333"
+                Padding="10"
+                CornerRadius="5"
+                Margin="0,0,0,10"
+                MaxWidth="380">
+
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                  <Border
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Width="40"
+                    Height="40"
+                    Background="#666"
+                    CornerRadius="20"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Top">
+
+                    <TextBlock
+                      FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                      FontSize="28"
+                      Foreground="#eee"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Margin="0,-3,0,0"
+                      Text="&#xf5be;" />
+                  </Border>
+
+                  <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock
+                      FontWeight="Bold"
+                      Text="You"
+                      Margin="0,0,8,0"/>
+
+                    <TextBlock
+                      Foreground="#aaa"
+                      Text="{Binding PostedAt, Converter={StaticResource RelativeTimeConverter}}"
+                      ToolTip.Tip="{Binding PostedAt, StringFormat=F}" />
+                  </StackPanel>
+
+                  <TextBlock
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    TextWrapping="Wrap"
+                    LineHeight="20"
+                    Foreground="#eee"
+                    Text="{Binding Text}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border
+      Grid.Row="1"
+      BorderBrush="#555"
+      BorderThickness="0,1,0,0"
+      Padding="0,20,0,0">
+
+      <Grid ColumnDefinitions="*,Auto,Auto">
+        <Button Grid.Column="0" Background="RoyalBlue">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xf299;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              VerticalAlignment="Center"
+              Text="Mark as complete" />
+          </StackPanel>
+        </Button>
+
+        <Button
+          Grid.Column="1"
+          FontFamily="{StaticResource FluentSystemIcons.Regular}"
+          FontSize="20"
+          Content="&#xf557;">
+          
+          <Button.Flyout>
+            <MenuFlyout Placement="TopEdgeAlignedRight">
+              <MenuItem Header="Edit" Command="{Binding EditTaskCommand}" CommandParameter="{Binding Item}">
+                <MenuItem.Icon>
+                  <TextBlock
+                    FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                    Text="&#xe8d6;" />
+                </MenuItem.Icon>
+              </MenuItem>
+
+              <MenuItem Header="Move to today" IsEnabled="False">
+                <MenuItem.Icon>
+                  <TextBlock
+                    FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                    Text="&#xe0ea;" />
+                </MenuItem.Icon>
+              </MenuItem>
+              
+              <MenuItem Header="Delete">
+                <MenuItem.Icon>
+                  <TextBlock
+                    FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                    Text="&#xe47b;" />
+                </MenuItem.Icon>
+              </MenuItem>
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+      </Grid> 
+    </Border>
+  </Grid>
+</UserControl>

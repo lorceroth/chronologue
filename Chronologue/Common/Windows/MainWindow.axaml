@@ -21,7 +21,8 @@
 
   <Window.Styles>
     <Style Selector="Button.isActive">
-      <Setter Property="Background" Value="#2e2e2e" />
+      <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForegroundChecked}" />
+      <Setter Property="Background" Value="{DynamicResource ToggleButtonBackgroundChecked}" />
     </Style>
   </Window.Styles>
 
@@ -86,114 +87,13 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-
-      <!--<Button
-        Background="#2e2e2e"
-        HorizontalAlignment="Stretch"
-        HorizontalContentAlignment="Center"
-        VerticalContentAlignment="Center"
-        Height="75"
-        Margin="5,-1,5,5"
-        Padding="0"
-        CornerRadius="10">
-
-        <StackPanel Orientation="Vertical">
-          <TextBlock
-            FontFamily="{StaticResource FluentSystemIcons.Regular}"
-            FontSize="32"
-            TextAlignment="Center"
-            Text="&#xe35e;"
-            Margin="0,0,0,5"/>
-
-          <TextBlock
-            FontSize="12"
-            TextAlignment="Center"
-            Text="Tasks" />
-        </StackPanel>
-      </Button>
-
-      <Button
-        Background="Transparent"
-        HorizontalAlignment="Stretch"
-        HorizontalContentAlignment="Center"
-        VerticalContentAlignment="Center"
-        Height="75"
-        Margin="5,0,5,5"
-        Padding="0"
-        CornerRadius="10">
-
-        <StackPanel Orientation="Vertical">
-          <TextBlock
-            FontFamily="{StaticResource FluentSystemIcons.Regular}"
-            FontSize="32"
-            TextAlignment="Center"
-            Text="&#xf1fd;"
-            Margin="0,0,0,5"/>
-
-          <TextBlock
-            FontSize="12"
-            TextAlignment="Center"
-            Text="Projects" />
-        </StackPanel>
-      </Button>
-
-      <Button
-        Background="Transparent"
-        HorizontalAlignment="Stretch"
-        HorizontalContentAlignment="Center"
-        VerticalContentAlignment="Center"
-        Height="75"
-        Margin="5,0,5,5"
-        Padding="0"
-        CornerRadius="10">
-
-        <StackPanel Orientation="Vertical">
-          <TextBlock
-            FontFamily="{StaticResource FluentSystemIcons.Regular}"
-            FontSize="32"
-            TextAlignment="Center"
-            Text="&#xf77d;"
-            Margin="0,0,0,5"/>
-
-          <TextBlock
-            FontSize="12"
-            TextAlignment="Center"
-            Text="Tags" />
-        </StackPanel>
-      </Button>
-
-      <Button
-        Background="Transparent"
-        HorizontalAlignment="Stretch"
-        HorizontalContentAlignment="Center"
-        VerticalContentAlignment="Center"
-        Height="75"
-        Margin="5,0,5,5"
-        Padding="0"
-        CornerRadius="10">
-
-        <StackPanel Orientation="Vertical">
-          <TextBlock
-            FontFamily="{StaticResource FluentSystemIcons.Regular}"
-            FontSize="32"
-            TextAlignment="Center"
-            Text="&#xf6aa;"
-            Margin="0,0,0,5"/>
-
-          <TextBlock
-            FontSize="12"
-            TextAlignment="Center"
-            Text="Options" />
-        </StackPanel>
-      </Button>-->
     </StackPanel>
 
     <Border
       Grid.Column="1"
       Grid.Row="1"
       Background="#252525"
-      CornerRadius="10,0,0,0"
-      Padding="20">
+      CornerRadius="10,0,0,0">
 
       <TransitioningContentControl Content="{Binding Page}">
         <TransitioningContentControl.PageTransition>

@@ -61,10 +61,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public void Navigate(Type? pageType) => _router.Navigate(pageType);
 
-    private void OnRouterNavigated(object sender, NavigatedEventArgs e)
+    private void OnRouterNavigated(object sender, RouterNavigatedEventArgs e)
     {
         Page = e.Page;
         Page.Initialize();
+        Page.Navigated(e.Parameters);
 
         UpdateSidebarItemStates();
     }
