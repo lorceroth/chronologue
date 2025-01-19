@@ -1,11 +1,12 @@
 ﻿using Chronologue.Features.Projects.Entities;
 using Chronologue.Features.Tags.Entities;
+using Chronologue.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 
 namespace Chronologue.Features.Tasks.Entities;
 
-public class Item
+public class Item : IEntity, ITimestampedEntity
 {
     public Guid Id { get; set; }
 
@@ -21,9 +22,15 @@ public class Item
 
     public ICollection<Tag> Tags { get; set; } = [];
 
-    public ICollection<Note> Notes { get; set; } = [];
+    public ICollection<ItemNote> Notes { get; set; } = [];
+
+    public decimal HoursSpent { get; set; }
 
     public DateTime? CompletedAt { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
 
     public bool IsUpToDate => CompletedAt is null && Due >= DateTime.UtcNow.Date;
 

@@ -35,12 +35,12 @@ public static class TaskDesignMock
                 new()
                 {
                     Text = "Morbi consectetur, lorem non faucibus consequat, eros nibh mollis ex, ut commodo justo mi eget nunc.",
-                    PostedAt = DateTime.UtcNow.AddHours(-1),
+                    CreatedAt = DateTime.UtcNow.AddHours(-1),
                 },
                 new()
                 {
                     Text = "Etiam vitae pharetra ex. Sed accumsan euismod leo.",
-                    PostedAt = DateTime.UtcNow.AddHours(-2),
+                    CreatedAt = DateTime.UtcNow.AddHours(-2),
                 },
             ],
         },
@@ -83,7 +83,7 @@ public static class TaskDesignMock
                 new()
                 {
                     Text = "Etiam vitae pharetra ex. Sed accumsan euismod leo.",
-                    PostedAt = DateTime.UtcNow.AddHours(-2),
+                    CreatedAt = DateTime.UtcNow.AddHours(-2),
                 },
             ],
         },

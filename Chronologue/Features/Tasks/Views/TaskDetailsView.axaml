@@ -240,8 +240,8 @@
 
                     <TextBlock
                       Foreground="#aaa"
-                      Text="{Binding PostedAt, Converter={StaticResource RelativeTimeConverter}}"
-                      ToolTip.Tip="{Binding PostedAt, StringFormat=F}" />
+                      Text="{Binding CreatedAt, Converter={StaticResource RelativeTimeConverter}}"
+                      ToolTip.Tip="{Binding CreatedAt, StringFormat=F}" />
                   </StackPanel>
 
                   <TextBlock
