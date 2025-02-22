@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using System.Linq;
 
 namespace Chronologue.Features.Tasks.Views;
 

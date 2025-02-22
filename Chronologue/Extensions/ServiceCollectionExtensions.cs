@@ -40,6 +40,8 @@ public static class ServiceCollectionExtensions
             config.UseSqlite($"Data Source={path}");
         });
 
+        services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>());
+
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<Router>();
 

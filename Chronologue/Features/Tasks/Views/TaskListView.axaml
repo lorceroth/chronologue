@@ -5,6 +5,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:i="System.Windows.Interactivity"
+  xmlns:converters="clr-namespace:Chronologue.Common.Converters;assembly=Chronologue"
   mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="615"
   x:Class="Chronologue.Features.Tasks.Views.TaskListView"
   x:DataType="vm:TaskListViewModel"
@@ -14,6 +15,10 @@
   <Design.DataContext>
     <vm:TaskListViewModel />
   </Design.DataContext>
+
+  <UserControl.Resources>
+    <converters:ItemForegroundConverter x:Key="ItemForegroundConverter" />
+  </UserControl.Resources>
 
   <UserControl.Styles>
     <Style Selector="TextBox.unstyled,ComboBox.unstyled">
@@ -165,6 +170,12 @@
         </Border>
 
         <ItemsControl x:Name="Items" ItemsSource="{Binding ProjectItems}">
+          <ItemsControl.Styles>
+            <Style Selector="Button">
+              <Setter Property="Background" Value="Transparent" />
+            </Style>
+          </ItemsControl.Styles>
+          
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <Expander
@@ -173,18 +184,24 @@
                 Background="Transparent"
                 BorderBrush="Transparent"
                 Padding="0,10"
-                Header="{Binding Project.Name}">
+                Header="{Binding ProjectName}">
 
                 <StackPanel Orientation="Vertical">
                   <ItemsControl ItemsSource="{Binding Items}">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                          <CheckBox Margin="0,0,10,0" />
+                          <CheckBox
+                            IsChecked="{Binding IsCompleted, Mode=OneWay}"
+                            Command="{Binding #Items.((vm:TaskListViewModel)DataContext).ToggleItemCompletionCommand}"
+                            CommandParameter="{Binding .}"
+                            Margin="0,0,10,0" />
+                          
                           <Button
                             Command="{Binding #Items.((vm:TaskListViewModel)DataContext).ShowTaskDetailsCommand}"
                             CommandParameter="{Binding Id}"
-                            Content="{Binding Title}" />
+                            Content="{Binding Title}"
+                            Foreground="{Binding IsCompleted, Converter={StaticResource ItemForegroundConverter}}" />
                         </StackPanel>
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>

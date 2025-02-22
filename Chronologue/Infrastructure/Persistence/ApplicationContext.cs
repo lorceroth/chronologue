@@ -2,11 +2,14 @@
 using Chronologue.Features.Tags.Entities;
 using Chronologue.Features.Tasks.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Chronologue.Infrastructure.Persistence;
 
-public partial class ApplicationContext : DbContext
+public class ApplicationContext : DbContext
 {
     public ApplicationContext(DbContextOptions options)
         : base(options)
@@ -21,10 +24,42 @@ public partial class ApplicationContext : DbContext
 
     public DbSet<Tag> Tags { get; set; }
 
+    public override int SaveChanges()
+    {
+        SetTimestamps();
+
+        return base.SaveChanges();
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        SetTimestamps();
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         ConfigureEntities(builder);
-        ConfigureEntityDefaults(builder);
+    }
+
+    private void SetTimestamps()
+    {
+        foreach (var (state, entity) in ChangeTracker.Entries()
+            .Where(x => x.Entity is ITimestampedEntity)
+            .Select(x => (x.State, x.Entity as ITimestampedEntity)))
+        {
+            switch (state)
+            {
+                case EntityState.Added:
+                    entity!.CreatedAt = DateTime.UtcNow;
+                    break;
+
+                case EntityState.Modified:
+                    entity!.UpdatedAt = DateTime.UtcNow;
+                    break;
+            }
+        }
     }
 
     private void ConfigureEntities(ModelBuilder builder)
@@ -49,26 +84,5 @@ public partial class ApplicationContext : DbContext
         {
             entity.Property(x => x.Name).IsRequired();
         });
-    }
-
-    private void ConfigureEntityDefaults(ModelBuilder builder)
-    {
-        foreach (var entity in builder.Model.FindEntityTypes(typeof(IEntity)))
-        {
-            var id = entity.FindProperty(nameof(IEntity.Id))!;
-
-            id.IsNullable = false;
-            id.ValueGenerated = ValueGenerated.OnAdd;
-        }
-
-        foreach (var entity in builder.Model.FindEntityTypes(typeof(ITimestampedEntity)))
-        {
-            var createdAt = entity.FindProperty(nameof(ITimestampedEntity.CreatedAt))!;
-            var updatedAt = entity.FindProperty(nameof(ITimestampedEntity.UpdatedAt))!;
-
-            createdAt.IsNullable = false;
-            createdAt.ValueGenerated = ValueGenerated.OnAdd;
-            updatedAt.ValueGenerated = ValueGenerated.OnUpdate;
-        }
     }
 }

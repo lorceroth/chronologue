@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Diagnostics;
 
 namespace Chronologue;
 
@@ -15,13 +14,12 @@ internal sealed class Program : IDesignTimeDbContextFactory<ApplicationContext>
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args) =>
-        BuildAvaloniaApp(CreateServiceCollection().BuildServiceProvider())
-            .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args) => BuildAvaloniaApp()
+        .StartWithClassicDesktopLifetime(args);
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp(IServiceProvider services)
-        => AppBuilder.Configure(() => new App(services))
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure(CreateAvaloniaApp)
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
@@ -32,6 +30,8 @@ internal sealed class Program : IDesignTimeDbContextFactory<ApplicationContext>
 
         return new ApplicationContext(services.GetRequiredService<DbContextOptions>());
     }
+
+    private static App CreateAvaloniaApp() => new App(CreateServiceCollection().BuildServiceProvider());
 
     private static IServiceCollection CreateServiceCollection()
     {

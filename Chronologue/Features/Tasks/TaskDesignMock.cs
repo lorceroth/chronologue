@@ -92,10 +92,7 @@ public static class TaskDesignMock
     private static List<ProjectItemCollection> _projectItems = [
         new ProjectItemCollection
         {
-            Project = new()
-            {
-                Name = "Project A",
-            },
+            ProjectName = "Project A",
             Date = DateTime.UtcNow.Date,
             Items = [.. _items!.Select(x => new ListableItem
             {

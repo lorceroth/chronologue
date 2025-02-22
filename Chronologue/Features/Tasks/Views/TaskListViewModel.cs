@@ -1,14 +1,18 @@
-﻿using Chronologue.Common.Routing;
+﻿using Avalonia.Controls;
+using Chronologue.Common.Routing;
 using Chronologue.Common.Views;
+using Chronologue.Features.Tasks.Commands;
 using Chronologue.Features.Tasks.Entities;
 using Chronologue.Features.Tasks.Models;
+using Chronologue.Features.Tasks.Queries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Humanizer;
+using MediatR;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Chronologue.Features.Tasks.Views;
 
@@ -25,7 +29,7 @@ public record WeekDay(int Index, string ShortName, DateTime Date) : INotifyPrope
         {
             _isSelected = value;
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+            PropertyChanged?.Invoke(this, new(nameof(IsSelected)));
         }
     }
 }
@@ -33,6 +37,7 @@ public record WeekDay(int Index, string ShortName, DateTime Date) : INotifyPrope
 public partial class TaskListViewModel : ViewModelBase
 {
     private readonly Router _router;
+    private readonly IMediator _mediator;
 
     [ObservableProperty]
     private DateTime _selectedDate;
@@ -60,32 +65,39 @@ public partial class TaskListViewModel : ViewModelBase
                 return new WeekDay(x, date.DayOfWeek.ToString()[..3], date);
             }));
 
-        SelectedDate = now;
-
+        GetTasksCommand = new AsyncRelayCommand(GetTasks);
         ToggleDateSelectorCommand = new RelayCommand(ToggleDateSelector);
         SetSelectedDateCommand = new RelayCommand<DateTime>(SetSelectedDate);
+        ToggleItemCompletionCommand = new AsyncRelayCommand<ListableItem>(ToggleItemCompletion);
         ShowTaskDetailsCommand = new RelayCommand<Guid>(ShowTaskDetails);
-        AddItemCommand = new RelayCommand<(string Title, bool NavigateToForm)>(AddItem);
+        AddItemCommand = new AsyncRelayCommand<(string Title, bool NavigateToForm)>(AddItem);
+
+        SelectedDate = now;
     }
 
-    public TaskListViewModel(Router router) : this()
+    public TaskListViewModel(Router router, IMediator mediator) : this()
     {
         _router = router;
+        _mediator = mediator;
     }
 
     public override string? Context => Constants.Context;
 
     public ObservableCollection<WeekDay> Week { get; set; }
 
-    public RelayCommand ToggleDateSelectorCommand { get; set; }
+    public IAsyncRelayCommand GetTasksCommand { get; set; }
 
-    public RelayCommand<DateTime> SetSelectedDateCommand { get; set; }
+    public IRelayCommand ToggleDateSelectorCommand { get; set; }
 
-    public RelayCommand<Guid> ShowTaskDetailsCommand { get; set; }
+    public IRelayCommand<DateTime> SetSelectedDateCommand { get; set; }
 
-    public RelayCommand<(string Title, bool NavigateToForm)> AddItemCommand { get; set; }
+    public IAsyncRelayCommand<ListableItem> ToggleItemCompletionCommand { get; set; }
 
-    public ObservableCollection<ProjectItemCollection> ProjectItems { get; set; }
+    public IRelayCommand<Guid> ShowTaskDetailsCommand { get; set; }
+
+    public IAsyncRelayCommand<(string Title, bool NavigateToForm)> AddItemCommand { get; set; }
+
+    public ObservableCollection<ProjectItemCollection> ProjectItems { get; } = [];
 
     partial void OnSelectedDateChanged(DateTime value)
     {
@@ -97,7 +109,52 @@ public partial class TaskListViewModel : ViewModelBase
 
     public override void DesignInitialize()
     {
-        ProjectItems = new(TaskDesignMock.GetProjectItems(SelectedDate));
+        var projectItemCollections = TaskDesignMock.GetProjectItems(SelectedDate);
+
+        foreach (var projectItemCollection in projectItemCollections)
+        {
+            ProjectItems.Add(projectItemCollection);
+        }
+    }
+
+    public override void Navigated(RouterParameters parameters)
+    {
+        GetTasksCommand.Execute(default);
+    }
+
+    private async Task GetTasks()
+    {
+        if (_mediator is null)
+        {
+            return;
+        }
+
+        ProjectItems.Clear();
+
+        var tasks = await _mediator.Send(new GetTasksByDayQuery(SelectedDate));
+
+        if (tasks.Count is 0)
+        {
+            return;
+        }
+
+        var tasksByProject = tasks
+            .GroupBy(x => x.Project)
+            .Select(x => new ProjectItemCollection
+            {
+                ProjectName = x.Key?.Name ?? "No project",
+                Items = [.. x.Select(y => new ListableItem
+                {
+                    Id = y.Id,
+                    Title = y.Title,
+                    IsCompleted = y.CompletedAt is not null,
+                })],
+            });
+
+        foreach (var projectItemCollection in tasksByProject)
+        {
+            ProjectItems.Add(projectItemCollection);
+        }
     }
 
     private void ToggleDateSelector()
@@ -110,10 +167,20 @@ public partial class TaskListViewModel : ViewModelBase
     private void SetSelectedDate(DateTime date)
     {
         SelectedDate = date;
-        SelectedDateRelativeName = CreateSelectedDateRelativeName();
+    }
 
-        UpdateProjectItems(date);
-        UpdateWeekStates(date);
+    private async Task ToggleItemCompletion(ListableItem? item)
+    {
+        if (item is null)
+        {
+            return;
+        }
+
+        var completedAt = item.IsCompleted is false ? DateTime.UtcNow : (DateTime?)null;
+
+        var _ = await _mediator.Send(new UpdateTaskCompletionCommand(item.Id, completedAt));
+
+        item.IsCompleted = completedAt is not null;
     }
 
     private void ShowTaskDetails(Guid id) => _router?.Navigate<TaskDetailsViewModel>(new()
@@ -121,16 +188,9 @@ public partial class TaskListViewModel : ViewModelBase
         [TaskDetailsViewModel.IdParameterName] = id,
     });
 
-    private void AddItem((string Title, bool NavigateToForm) args)
+    private async Task AddItem((string Title, bool NavigateToForm) args)
     {
-        var item = new Item
-        {
-            Id = Guid.NewGuid(),
-            Title = args.Title,
-            Due = DateTime.UtcNow.Date,
-        };
-
-        TaskDesignMock.AddItem(item);
+        var item = await _mediator.Send(new CreateTaskCommand(args.Title, SelectedDate));
 
         UpdateProjectItems(SelectedDate);
 
@@ -173,11 +233,18 @@ public partial class TaskListViewModel : ViewModelBase
     {
         ProjectItems.Clear();
 
-        var selectedDateProjectItems = TaskDesignMock.GetProjectItems(date);
-
-        foreach (var projectItem in selectedDateProjectItems)
+        if (Design.IsDesignMode)
         {
-            ProjectItems.Add(projectItem);
+            var selectedDateProjectItems = TaskDesignMock.GetProjectItems(date);
+
+            foreach (var projectItem in selectedDateProjectItems)
+            {
+                ProjectItems.Add(projectItem);
+            }
+        }
+        else
+        {
+            GetTasksCommand.Execute(default);
         }
     }
 
