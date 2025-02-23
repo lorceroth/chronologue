@@ -2,7 +2,6 @@
 using Chronologue.Common.Routing;
 using Chronologue.Common.Views;
 using Chronologue.Features.Tasks.Commands;
-using Chronologue.Features.Tasks.Entities;
 using Chronologue.Features.Tasks.Models;
 using Chronologue.Features.Tasks.Queries;
 using CommunityToolkit.Mvvm.ComponentModel;

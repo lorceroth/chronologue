@@ -7,29 +7,26 @@ using System.Threading.Tasks;
 
 namespace Chronologue.Features.Tasks.Commands;
 
-public class UpdateTaskCompletionCommand : IRequest<Item?>
+public class DeleteTaskCommand : IRequest<Item?>
 {
-    public UpdateTaskCompletionCommand(Guid id, DateTime? completedAt)
+    public DeleteTaskCommand(Guid id)
     {
         Id = id;
-        CompletedAt = completedAt;
     }
 
     public Guid Id { get; }
-
-    public DateTime? CompletedAt { get; }
 }
 
-public class UpdateTaskCompletionCommandHandler : IRequestHandler<UpdateTaskCompletionCommand, Item?>
+public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, Item?>
 {
     private readonly ApplicationContext _context;
 
-    public UpdateTaskCompletionCommandHandler(ApplicationContext context)
+    public DeleteTaskCommandHandler(ApplicationContext context)
     {
         _context = context;
     }
 
-    public async Task<Item?> Handle(UpdateTaskCompletionCommand request, CancellationToken cancellationToken)
+    public async Task<Item?> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
         var item = await _context.Items.FindAsync(request.Id);
 
@@ -38,7 +35,7 @@ public class UpdateTaskCompletionCommandHandler : IRequestHandler<UpdateTaskComp
             return default;
         }
 
-        item.CompletedAt = request.CompletedAt;
+        _context.Items.Remove(item);
 
         await _context.SaveChangesAsync(cancellationToken);
 

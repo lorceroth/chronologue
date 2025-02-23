@@ -121,7 +121,7 @@
           CornerRadius="5"
           Padding="10,15"
           Margin="0,0,0,20"
-          IsVisible="{Binding Item.CompletedAt, Converter={x:Static ObjectConverters.IsNotNull}}">
+          IsVisible="{Binding Item.IsCompleted}">
 
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock
@@ -135,7 +135,7 @@
               Foreground="LightGreen"
               VerticalAlignment="Center">
               
-              Completed at <Run FontWeight="Bold">January 6, 2025</Run>
+              Completed at <Run FontWeight="Bold" Text="{Binding Item.CompletedAt, Mode=OneWay, StringFormat=d}" />
             </TextBlock>
           </StackPanel>
         </Border>
@@ -159,7 +159,7 @@
             <TextBlock
               Foreground="Orange"
               VerticalAlignment="Center">
-              Overdue since <Run FontWeight="Bold">January 6, 2025</Run>
+              Overdue since <Run FontWeight="Bold" Text="{Binding Item.Due, StringFormat=d}" />
             </TextBlock>
           </StackPanel>
         </Border>
@@ -170,10 +170,11 @@
           Margin="0,0,0,20" />
 
         <TextBox
+          Name="NewNoteText"
           TextWrapping="Wrap"
-          AcceptsReturn="True"
           Watermark="Add a note to this task"
-          Margin="0,0,0,20"/>
+          Margin="0,0,0,20"
+          KeyDown="OnNewNoteTitleKeyDown" />
 
         <Border
           BorderBrush="#888"
@@ -266,7 +267,13 @@
       Padding="0,20,0,0">
 
       <Grid ColumnDefinitions="*,Auto,Auto">
-        <Button Grid.Column="0" Background="RoyalBlue">
+        <Button
+          Grid.Column="0"
+          Command="{Binding ToggleItemCompletionCommand}"
+          CommandParameter="{Binding Item}"
+          IsVisible="{Binding !Item.IsCompleted}"
+          ToolTip.Tip="Mark as complete">
+          
           <StackPanel Orientation="Horizontal">
             <TextBlock
               FontFamily="{StaticResource FluentSystemIcons.Regular}"
@@ -281,6 +288,27 @@
         </Button>
 
         <Button
+          Grid.Column="0"
+          Command="{Binding ToggleItemCompletionCommand}"
+          CommandParameter="{Binding Item}"
+          Background="Green"
+          IsVisible="{Binding Item.IsCompleted}"
+          ToolTip.Tip="Mark as uncomplete">
+          
+          <StackPanel Orientation="Horizontal">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xf299;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              VerticalAlignment="Center"
+              Text="Completed" />
+          </StackPanel>
+        </Button>
+
+        <Button
           Grid.Column="1"
           FontFamily="{StaticResource FluentSystemIcons.Regular}"
           FontSize="20"
@@ -288,7 +316,7 @@
           
           <Button.Flyout>
             <MenuFlyout Placement="TopEdgeAlignedRight">
-              <MenuItem Header="Edit" Command="{Binding EditTaskCommand}" CommandParameter="{Binding Item}">
+              <MenuItem Header="Edit" Command="{Binding EditTaskCommand}" CommandParameter="{Binding Item.Id}">
                 <MenuItem.Icon>
                   <TextBlock
                     FontFamily="{StaticResource FluentSystemIcons.Regular}"
@@ -296,7 +324,7 @@
                 </MenuItem.Icon>
               </MenuItem>
 
-              <MenuItem Header="Move to today" IsEnabled="False">
+              <MenuItem Header="Move to today" Command="{Binding MoveToTodayCommand}" CommandParameter="{Binding Item}" IsEnabled="{Binding Item.IsOverdue}">
                 <MenuItem.Icon>
                   <TextBlock
                     FontFamily="{StaticResource FluentSystemIcons.Regular}"
@@ -304,7 +332,7 @@
                 </MenuItem.Icon>
               </MenuItem>
               
-              <MenuItem Header="Delete">
+              <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding Item.Id}">
                 <MenuItem.Icon>
                   <TextBlock
                     FontFamily="{StaticResource FluentSystemIcons.Regular}"

@@ -31,8 +31,4 @@ public class Item : IEntity, ITimestampedEntity
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
-
-    public bool IsUpToDate => CompletedAt is null && Due >= DateTime.UtcNow.Date;
-
-    public bool IsOverdue => CompletedAt is null && Due < DateTime.UtcNow.Date;
 }

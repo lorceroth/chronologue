@@ -119,7 +119,7 @@
             <TextBlock
               FontFamily="{StaticResource FluentSystemIcons.Regular}"
               FontSize="20"
-              Text="&#xea49;"
+              Text="&#xf199;"
               Margin="0,0,5,0"/>
 
             <TextBlock

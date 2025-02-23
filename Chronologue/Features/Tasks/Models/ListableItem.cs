@@ -1,37 +1,16 @@
-﻿using System;
-using System.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 
 namespace Chronologue.Features.Tasks.Models;
 
-public class ListableItem : INotifyPropertyChanged
+public partial class ListableItem : ObservableObject
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-    
+    [ObservableProperty]
+    private Guid _id;
+
+    [ObservableProperty]
     private string? _title;
+
+    [ObservableProperty]
     private bool _isCompleted;
-
-    public Guid Id { get; set; }
-
-    public string? Title
-    {
-        get => _title;
-        set
-        {
-            _title = value;
-
-            PropertyChanged?.Invoke(this, new(nameof(Title)));
-        }
-    }
-
-    public bool IsCompleted
-    {
-        get => _isCompleted;
-        set
-        {
-            _isCompleted = value;
-
-            PropertyChanged?.Invoke(this, new(nameof(IsCompleted)));
-        }
-    }
-
 }
