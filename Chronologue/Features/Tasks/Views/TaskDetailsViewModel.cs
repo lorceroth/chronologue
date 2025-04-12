@@ -53,7 +53,7 @@ public partial class TaskDetailsViewModel : ViewModelBase
 
     public override void DesignInitialize()
     {
-        var item = TaskDesignMock.GetItemById(Guid.Parse("e495b0ac-4b0b-4a6c-9f9f-e2f30bdfcb07"));
+        var item = DesignMock.GetItemById(Guid.Parse("e495b0ac-4b0b-4a6c-9f9f-e2f30bdfcb07"));
 
         Item = new ItemDetails
         {

@@ -13,7 +13,8 @@
   Height="650"
   Background="#1f1f1f"
   ExtendClientAreaToDecorationsHint="True"
-  CanResize="False">
+  CanResize="False"
+  Focusable="True">
 
   <Design.DataContext>
     <vm:MainWindowViewModel/>

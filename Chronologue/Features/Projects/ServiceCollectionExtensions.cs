@@ -16,5 +16,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddSingleton<ProjectListViewModel>();
+        services.AddSingleton<ProjectDetailsViewModel>();
+        services.AddSingleton<ProjectFormViewModel>();
     }
 }

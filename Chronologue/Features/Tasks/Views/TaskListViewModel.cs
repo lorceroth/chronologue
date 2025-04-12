@@ -108,7 +108,7 @@ public partial class TaskListViewModel : ViewModelBase
 
     public override void DesignInitialize()
     {
-        var projectItemCollections = TaskDesignMock.GetProjectItems(SelectedDate);
+        var projectItemCollections = DesignMock.GetProjectItems(SelectedDate);
 
         foreach (var projectItemCollection in projectItemCollections)
         {
@@ -234,7 +234,7 @@ public partial class TaskListViewModel : ViewModelBase
 
         if (Design.IsDesignMode)
         {
-            var selectedDateProjectItems = TaskDesignMock.GetProjectItems(date);
+            var selectedDateProjectItems = DesignMock.GetProjectItems(date);
 
             foreach (var projectItem in selectedDateProjectItems)
             {

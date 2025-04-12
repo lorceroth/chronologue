@@ -5,21 +5,154 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:i="System.Windows.Interactivity"
-  mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="595"
+  mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="615"
   x:Class="Chronologue.Features.Projects.Views.ProjectListView"
   x:DataType="vm:ProjectListViewModel"
-  Background="#252525">
+  Background="Transparent"
+  Padding="20">
 
   <Design.DataContext>
     <vm:ProjectListViewModel />
   </Design.DataContext>
 
-  <StackPanel Orientation="Vertical">
-    <TextBlock
-      FontSize="32"
-      FontWeight="Bold"
-      Text="Projects"
-      Margin="0,0,0,5" />
-  </StackPanel>
+  <Grid RowDefinitions="*,Auto">
+    <ScrollViewer
+      Grid.Row="0"
+      AllowAutoHide="True"
+      Padding="0,0,20,0"
+      Margin="0,0,-20,0">
+
+      <StackPanel Orientation="Vertical">
+        <TextBlock
+          FontSize="32"
+          FontWeight="Bold"
+          Text="Projects"
+          Margin="0,0,0,20" />
+
+        <TextBlock
+          FontSize="18"
+          FontWeight="Light"
+          TextWrapping="Wrap"
+          LineHeight="27"
+          Margin="0,0,0,20">
+
+          Projects help you group related tasks together and summarize the total hours.
+        </TextBlock>
+
+        <Grid ColumnDefinitions="*,*">
+          <TextBox
+            Grid.Column="0"
+            Watermark="Search project"
+            Text="{Binding Search.Keywords}"
+            Margin="0,0,10,0" />
+
+          <ComboBox
+            Grid.Column="1"
+            ItemsSource="{Binding SortSelections}"
+            SelectedValue="{Binding Search.SortSelection}"
+            HorizontalAlignment="Stretch">
+            
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock
+                    FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                    Text="{Binding Icon}"
+                    Margin="0,1,5,0" />
+
+                  <TextBlock Text="{Binding Label}"/>
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </Grid>
+
+        <Separator Background="#555" Margin="0,20,0,20" />
+
+        <Border
+          BorderBrush="#888"
+          BorderThickness="1"
+          CornerRadius="5"
+          Padding="10,15"
+          Margin="0,0,0,20"
+          IsVisible="{Binding !Projects.Count}">
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="24"
+              Foreground="#888"
+              Text="&#xf1fd;"
+              Margin="0,0,5,0" />
+
+            <TextBlock
+              Foreground="#888"
+              VerticalAlignment="Center">
+
+              No projects here yet!
+            </TextBlock>
+          </StackPanel>
+        </Border>
+
+        <ItemsControl x:Name="Projects" ItemsSource="{Binding Projects}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Button
+                Command="{Binding #Projects.((vm:ProjectListViewModel)DataContext).ShowProjectDetailsCommand}"
+                CommandParameter="{Binding Id}"
+                HorizontalAlignment="Stretch"
+                Padding="10"
+                Margin="0,0,0,10"
+                BorderBrush="{Binding Color}"
+                BorderThickness="5,0,0,0">
+
+                <Button.Styles>
+                  <Style Selector="Button:pointerover /template/ ContentPresenter">
+                    <Setter Property="BorderBrush" Value="{Binding Color}" />
+                  </Style>
+                </Button.Styles>
+
+                <StackPanel Orientation="Vertical">
+                  <TextBlock
+                    FontWeight="Bold"
+                    Margin="0,0,0,5"
+                    Text="{Binding Name}"/>
+
+                  <TextBlock Text="{Binding Description}" />
+                </StackPanel>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border
+      Grid.Row="1"
+      BorderBrush="#555"
+      BorderThickness="0,1,0,0"
+      Padding="0,20,0,0">
+
+      <StackPanel Orientation="Horizontal">
+        <Button
+          Command="{Binding NewProjectCommand}"
+          Background="RoyalBlue"
+          Margin="0,0,10,0">
+
+          <StackPanel Orientation="Horizontal">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xf1fd;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              VerticalAlignment="Center"
+              Text="New project" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </Border>
+  </Grid>
 
 </UserControl>

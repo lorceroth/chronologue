@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Chronologue.Features.Tasks;
 
-public static class TaskDesignMock
+public static class DesignMock
 {
     private static List<Item> _items = [
         new Item

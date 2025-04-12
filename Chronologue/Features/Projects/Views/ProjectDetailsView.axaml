@@ -1,0 +1,196 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="using:Chronologue.Features.Projects.Views"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:i="System.Windows.Interactivity"
+  mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="615"
+  x:Class="Chronologue.Features.Projects.Views.ProjectDetailsView"
+  x:DataType="vm:ProjectDetailsViewModel"
+  Background="Transparent"
+  Padding="20">
+
+  <Design.DataContext>
+    <vm:ProjectDetailsViewModel />
+  </Design.DataContext>
+
+  <Grid RowDefinitions="*,Auto">
+    <ScrollViewer
+      Grid.Row="0"
+      AllowAutoHide="True"
+      Padding="0,0,20,0"
+      Margin="0,0,-20,0">
+
+      <StackPanel Orientation="Vertical">
+        <StackPanel.Styles>
+          <Style Selector="Expander /template/ ToggleButton#ExpanderHeader">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+          </Style>
+        </StackPanel.Styles>
+        
+        <TextBlock
+          FontSize="32"
+          FontWeight="Bold"
+          TextWrapping="Wrap"
+          Text="{Binding Project.Name}"
+          Margin="0,0,0,20" />
+
+        <TextBlock
+          FontSize="18"
+          FontWeight="Light"
+          TextWrapping="Wrap"
+          LineHeight="27"
+          Text="{Binding Project.Description}"
+          Margin="0,0,0,15"
+          IsVisible="True"/>
+
+        <TextBlock
+          FontSize="18"
+          FontWeight="Light"
+          TextWrapping="Wrap"
+          LineHeight="27"
+          Foreground="#888"
+          Text="No description"
+          Margin="0,0,0,15"
+          IsVisible="False"/>
+        
+        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*" Margin="0,0,0,20">
+          <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Orientation="Horizontal"
+            Margin="0,0,0,10">
+
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xe35e;"
+              Margin="0,0,5,0" />
+            
+            <TextBlock Margin="0,3,0,0">
+              <Run Text="{Binding Project.ItemsCount}" /> tasks
+            </TextBlock>
+          </StackPanel>
+
+          <StackPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xf2dc;"
+              Margin="0,0,5,0" />
+
+            <TextBlock Margin="0,3,0,0">
+              <Run Text="{Binding Project.TotalHours}" /> hours
+            </TextBlock>
+          </StackPanel>
+
+          <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Orientation="Horizontal">
+
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xf0283;"
+              Margin="0,0,5,0" />
+
+            <TextBlock Margin="0,3,0,0">
+              <Run Text="{Binding Project.WorkedPeriodStart, StringFormat=MMM yyyy}" /> - <Run Text="{Binding Project.WorkedPeriodEnd, StringFormat=MMM yyyy}" />
+            </TextBlock>
+          </StackPanel>
+        </Grid>
+
+        <TextBlock
+          FontSize="20"
+          Text="Tasks"
+          Margin="0,0,0,10" />
+
+        <ItemsControl ItemsSource="{Binding Project.ItemGroups}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Expander
+                HorizontalAlignment="Stretch"
+                IsExpanded="{Binding IsFirstGroup}"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Padding="0,10"
+                Header="{Binding Month, StringFormat=MMM yyyy}">
+
+                <Expander.Styles>
+                  <Style Selector="Button">
+                    <Setter Property="Background" Value="Transparent" />
+                  </Style>
+                </Expander.Styles>
+
+                <StackPanel Orientation="Vertical">
+                  <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                          <CheckBox
+                            IsChecked="{Binding IsCompleted}"
+                            IsEnabled="False"
+                            Margin="0,0,10,0" />
+
+                          <Button Content="{Binding Title}" />
+                        </StackPanel>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>                  
+                </StackPanel>
+              </Expander>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border
+      Grid.Row="1"
+      BorderBrush="#555"
+      BorderThickness="0,1,0,0"
+      Padding="0,20,0,0">
+
+      <Grid ColumnDefinitions="*,Auto,Auto">
+        <Button
+          Grid.Column="1"
+          FontFamily="{StaticResource FluentSystemIcons.Regular}"
+          FontSize="20"
+          Content="&#xf557;">
+
+          <Button.Flyout>
+            <MenuFlyout Placement="TopEdgeAlignedRight">
+              <MenuItem Header="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding Project.Id}">
+                <MenuItem.Icon>
+                  <TextBlock
+                    FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                    Text="&#xe8d6;" />
+                </MenuItem.Icon>
+              </MenuItem>
+
+              <MenuItem Header="Delete">
+                <MenuItem.Icon>
+                  <TextBlock
+                    FontFamily="{StaticResource FluentSystemIcons.Regular}"
+                    Text="&#xe47b;" />
+                </MenuItem.Icon>
+              </MenuItem>
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+      </Grid>
+    </Border>
+  </Grid>
+  
+</UserControl>

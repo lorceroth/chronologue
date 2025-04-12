@@ -1,0 +1,122 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="using:Chronologue.Features.Projects.Views"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:i="System.Windows.Interactivity"
+  xmlns:converters="clr-namespace:Chronologue.Common.Converters;assembly=Chronologue"
+  mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="615"
+  x:Class="Chronologue.Features.Projects.Views.ProjectFormView"
+  x:DataType="vm:ProjectFormViewModel"
+  Background="Transparent"
+  Padding="20">
+  
+  <Design.DataContext>
+    <vm:ProjectFormViewModel />
+  </Design.DataContext>
+
+  <UserControl.Resources>
+    <converters:GuidConvertersIsNullOrEmpty x:Key="GuidConverters.IsNullOrEmpty" />
+    <converters:GuidConvertersIsNotNullOrEmpty x:Key="GuidConverters.IsNotNullOrEmpty" />
+  </UserControl.Resources>
+  
+  <Grid RowDefinitions="*,Auto">
+    <ScrollViewer
+      Grid.Row="0"
+      AllowAutoHide="True"
+      Padding="0,0,20,0"
+      Margin="0,0,-20,0">
+
+      <StackPanel Orientation="Vertical">
+        <TextBlock
+          FontSize="32"
+          FontWeight="Bold"
+          TextWrapping="Wrap"
+          Text="New project"
+          Margin="0,0,0,20"
+          IsVisible="{Binding Project.Id, Converter={StaticResource GuidConverters.IsNullOrEmpty}}" />
+
+        <TextBlock
+          FontSize="32"
+          FontWeight="Bold"
+          TextWrapping="Wrap"
+          Text="Edit project"
+          Margin="0,0,0,20"
+          IsVisible="{Binding Project.Id, Converter={StaticResource GuidConverters.IsNotNullOrEmpty}}" />
+
+        <TextBlock
+          Text="Name"
+          Margin="0,0,0,10" />
+
+        <TextBox
+          Text="{Binding Project.Name}"
+          Watermark="The next thing"
+          Margin="0,0,0,20" />
+
+        <TextBlock
+          Text="Description"
+          Margin="0,0,0,10" />
+
+        <TextBox
+          MinHeight="56"
+          AcceptsReturn="True"
+          TextWrapping="Wrap"
+          Watermark="Lorem ipsum dolor et samet"
+          Text="{Binding Project.Description}"
+          Margin="0,0,0,20" />
+
+        <TextBlock
+          Text="Color"
+          Margin="0,0,0,10" />
+        
+        <ColorPicker
+          HorizontalAlignment="Left"
+          Width="380"
+          Color="{Binding Project.Color}" />
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border
+      Grid.Row="1"
+      BorderBrush="#555"
+      BorderThickness="0,1,0,0"
+      Padding="0,20,0,0">
+
+      <StackPanel Orientation="Horizontal">
+        <Button
+          Command="{Binding SaveCommand}"
+          Background="RoyalBlue"
+          Margin="0,0,10,0">
+
+          <StackPanel Orientation="Horizontal">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xea49;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              VerticalAlignment="Center"
+              Text="Save changes" />
+          </StackPanel>
+        </Button>
+
+        <Button Command="{Binding DiscardCommand}">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock
+              FontFamily="{StaticResource FluentSystemIcons.Regular}"
+              FontSize="20"
+              Text="&#xf199;"
+              Margin="0,0,5,0"/>
+
+            <TextBlock
+              VerticalAlignment="Center"
+              Text="Discard" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </Border>
+  </Grid>
+  
+</UserControl>
